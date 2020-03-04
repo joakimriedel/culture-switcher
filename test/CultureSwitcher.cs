@@ -7,34 +7,22 @@ namespace Monotio.Util.Tests
     public class CultureSwitcherShould
     {
         [Fact]
-        public void SwitchCulture()
+        public void SwitchCultureUsingCultureInfo()
         {
             CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("en-US");
+            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-FR");
 
             Assert.Equal("en-US", CultureInfo.CurrentCulture.Name);
-            Assert.Equal("en-US", CultureInfo.CurrentUICulture.Name);
+            Assert.Equal("fr-FR", CultureInfo.CurrentUICulture.Name);
 
-            using (new CultureSwitcher("sv-SE"))
+            using (new CultureSwitcher(new CultureInfo("sv-SE"), new CultureInfo("fi-FI")))
             {
                 Assert.Equal("sv-SE", CultureInfo.CurrentCulture.Name);
-                Assert.Equal("sv-SE", CultureInfo.CurrentUICulture.Name);
+                Assert.Equal("fi-FI", CultureInfo.CurrentUICulture.Name);
             }
 
             Assert.Equal("en-US", CultureInfo.CurrentCulture.Name);
-            Assert.Equal("en-US", CultureInfo.CurrentUICulture.Name);
-        }
-
-        [Fact]
-        public void ThrowIfUICultureAndCultureDiffers()
-        {
-            CultureInfo.CurrentCulture = CultureInfo.CreateSpecificCulture("en-US");
-            CultureInfo.CurrentUICulture = CultureInfo.CreateSpecificCulture("sv-SE");
-
-            Assert.Equal("en-US", CultureInfo.CurrentCulture.Name);
-            Assert.Equal("sv-SE", CultureInfo.CurrentUICulture.Name);
-
-            Assert.Throws<InvalidOperationException>(() => new CultureSwitcher("de-DE"));
+            Assert.Equal("fr-FR", CultureInfo.CurrentUICulture.Name);
         }
     }
 }

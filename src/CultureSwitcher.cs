@@ -6,31 +6,24 @@ namespace Monotio.Util
     public class CultureSwitcher : IDisposable
     {
         private readonly CultureInfo _originalCulture;
+        private readonly CultureInfo _originalUICulture;
 
-        public CultureSwitcher(string culture)
+        public CultureSwitcher(CultureInfo culture, CultureInfo uiCulture)
         {
-            if (!CultureInfo.Equals(CultureInfo.CurrentCulture, CultureInfo.CurrentUICulture))
-            {
-                throw new InvalidOperationException(
-                    "Different CurrentCulture and CurrentUICulture culture is not supported."
-                    );
-            }
-
             _originalCulture = CultureInfo.CurrentCulture;
-            var cultureInfo = String.IsNullOrEmpty(culture) ? CultureInfo.CurrentCulture : new CultureInfo(culture);
-            
-            SetCulture(cultureInfo);
+            _originalUICulture = CultureInfo.CurrentUICulture;
+            SetCulture(culture, uiCulture);
         }
 
-        private void SetCulture(CultureInfo cultureInfo)
+        private void SetCulture(CultureInfo culture, CultureInfo uiCulture)
         {
-            CultureInfo.CurrentCulture = cultureInfo;
-            CultureInfo.CurrentUICulture = cultureInfo;
+            CultureInfo.CurrentCulture = culture;
+            CultureInfo.CurrentUICulture = uiCulture;
         }
 
         public void Dispose()
         {
-            SetCulture(_originalCulture);
+            SetCulture(_originalCulture, _originalUICulture);
         }
     }
 }
